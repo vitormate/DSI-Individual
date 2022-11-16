@@ -1,6 +1,6 @@
 # startup_namer
 
-A new Flutter project.
+A new Flutter project for subject of DSI(Information System Development)
 
 ## Getting Started
 
