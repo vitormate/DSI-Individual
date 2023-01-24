@@ -1,5 +1,6 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import './editar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -80,6 +81,14 @@ class _RandomWordsState extends State<RandomWords> {
               _suggestions[index].asPascalCase,
               style: _biggerFont,
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Editar(),
+                ),
+              );
+            },
             trailing: IconButton(
               onPressed: () {
                 setState(() {
@@ -109,31 +118,42 @@ class _RandomWordsState extends State<RandomWords> {
             _suggestions.addAll(generateWordPairs().take(10));
           }
           final alreadySaved = _saved.contains(_suggestions[i]);
-          return Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _suggestions[i].asPascalCase,
-                  style: _biggerFont,
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Editar(),
                 ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (alreadySaved) {
-                        _saved.remove(_suggestions[i]);
-                      } else {
-                        _saved.add(_suggestions[i]);
-                      }
-                    });
-                  },
-                  icon: Icon(
-                    alreadySaved ? Icons.favorite : Icons.favorite_border,
-                    color: alreadySaved ? Colors.red : null,
-                    semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+              );
+            },
+            child: Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    _suggestions[i].asPascalCase,
+                    style: _biggerFont,
                   ),
-                ),
-              ],
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (alreadySaved) {
+                          _saved.remove(_suggestions[i]);
+                        } else {
+                          _saved.add(_suggestions[i]);
+                        }
+                      });
+                    },
+                    icon: Icon(
+                      alreadySaved ? Icons.favorite : Icons.favorite_border,
+                      color: alreadySaved ? Colors.red : null,
+                      semanticLabel:
+                          alreadySaved ? 'Remove from saved' : 'Save',
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
