@@ -48,7 +48,7 @@ class _RandomWordsState extends State<RandomWords> {
 
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Saved Suggestions'),
+              title: const Text('Favoritos'),
             ),
             body: ListView(children: divided),
           );
@@ -80,20 +80,22 @@ class _RandomWordsState extends State<RandomWords> {
               _suggestions[index].asPascalCase,
               style: _biggerFont,
             ),
-            trailing: Icon(
-              alreadySaved ? Icons.favorite : Icons.favorite_border,
-              color: alreadySaved ? Colors.red : null,
-              semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+            trailing: IconButton(
+              onPressed: () {
+                setState(() {
+                  if (alreadySaved) {
+                    _saved.remove(_suggestions[index]);
+                  } else {
+                    _saved.add(_suggestions[index]);
+                  }
+                });
+              },
+              icon: Icon(
+                alreadySaved ? Icons.favorite : Icons.favorite_border,
+                color: alreadySaved ? Colors.red : null,
+                semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+              ),
             ),
-            onTap: () {
-              setState(() {
-                if (alreadySaved) {
-                  _saved.remove(_suggestions[index]);
-                } else {
-                  _saved.add(_suggestions[index]);
-                }
-              });
-            },
           );
         },
       );
@@ -165,9 +167,9 @@ class _RandomWordsState extends State<RandomWords> {
               ],
             ),
             IconButton(
-              icon: const Icon(Icons.list),
+              icon: const Icon(Icons.push_pin),
               onPressed: _pushSaved,
-              tooltip: 'Saved Suggestions',
+              tooltip: 'Favoritos',
             ),
           ],
         ),
