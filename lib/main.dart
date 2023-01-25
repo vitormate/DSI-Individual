@@ -1,9 +1,14 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import './editar.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+class Argumentos {
+  final WordPair nome;
+
+  Argumentos({required this.nome});
 }
 
 class MyApp extends StatelessWidget {
@@ -11,9 +16,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Startup Name Generator',
-      home: RandomWords(),
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const RandomWords(),
+        TelaEditar.routeName: (context) => const TelaEditar(),
+      },
     );
   }
 }
@@ -67,6 +75,7 @@ class _RandomWordsState extends State<RandomWords> {
     if (view == 'lista') {
       return ListView.builder(
         padding: const EdgeInsets.all(16.0),
+        itemCount: 40,
         itemBuilder: (context, i) {
           if (i.isOdd) return const Divider();
           final index = i ~/ 2;
@@ -82,12 +91,18 @@ class _RandomWordsState extends State<RandomWords> {
               style: _biggerFont,
             ),
             onTap: () {
-              Navigator.push(
+              print(_suggestions[index]);
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const Editar(),
-                ),
+                '/editar',
+                arguments: Argumentos(nome: _suggestions[index]),
               );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const Editar(),
+              //   ),
+              // );
             },
             trailing: IconButton(
               onPressed: () {
@@ -113,6 +128,7 @@ class _RandomWordsState extends State<RandomWords> {
         gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         padding: const EdgeInsets.all(16.0),
+        itemCount: 20,
         itemBuilder: (context, i) {
           if (i >= _suggestions.length) {
             _suggestions.addAll(generateWordPairs().take(10));
@@ -120,12 +136,18 @@ class _RandomWordsState extends State<RandomWords> {
           final alreadySaved = _saved.contains(_suggestions[i]);
           return InkWell(
             onTap: () {
-              Navigator.push(
+              print(_suggestions[i]);
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const Editar(),
-                ),
+                '/editar',
+                arguments: Argumentos(nome: _suggestions[i]),
               );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const Editar(),
+              //   ),
+              // );
             },
             child: Card(
               child: Column(
@@ -163,37 +185,93 @@ class _RandomWordsState extends State<RandomWords> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Startup Name Generator'),
-          actions: [
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    view = 'lista';
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.list_alt_outlined),
-                ),
-                IconButton(
-                  onPressed: () {
-                    view = 'bloco';
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.dataset_outlined),
-                ),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Startup Name Generator'),
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  view = 'lista';
+                  setState(() {});
+                },
+                icon: const Icon(Icons.list_alt_outlined),
+              ),
+              IconButton(
+                onPressed: () {
+                  view = 'bloco';
+                  setState(() {});
+                },
+                icon: const Icon(Icons.dataset_outlined),
+              ),
+            ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.push_pin),
+            onPressed: _pushSaved,
+            tooltip: 'Favoritos',
+          ),
+        ],
+      ),
+      body: corpo(),
+    );
+  }
+}
+
+class TelaEditar extends StatefulWidget {
+  const TelaEditar({super.key});
+
+  static const routeName = '/editar';
+
+  @override
+  State<TelaEditar> createState() => _TelaEditarState();
+}
+
+class _TelaEditarState extends State<TelaEditar> {
+  @override
+  Widget build(BuildContext context) {
+    final argumentos = ModalRoute.of(context)!.settings.arguments as Argumentos;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Editar palavra'),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 50,
+          ),
+          const Text(
+            'A palavra que deve ser editada é: ',
+            style: TextStyle(
+              fontSize: 40,
+              color: Colors.deepPurple,
             ),
-            IconButton(
-              icon: const Icon(Icons.push_pin),
-              onPressed: _pushSaved,
-              tooltip: 'Favoritos',
+          ),
+          Center(
+            child: Text(
+              argumentos.nome.asPascalCase,
+              style: const TextStyle(
+                fontSize: 30,
+                color: Colors.red,
+              ),
             ),
-          ],
-        ),
-        body: corpo(),
+          ),
+          const SizedBox(
+            width: 500,
+            child: TextField(
+              decoration: InputDecoration(labelText: 'Novo nome'),
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('Alterar'),
+          )
+        ],
       ),
     );
   }
