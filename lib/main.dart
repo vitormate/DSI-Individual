@@ -5,6 +5,11 @@ void main() {
   runApp(const MyApp());
 }
 
+final _suggestions = <WordPair>[];
+final _saved = <WordPair>{};
+final _biggerFont = const TextStyle(fontSize: 18);
+String view = 'lista';
+
 class ArgumentosHome {
   final WordPair nome;
   final int id;
@@ -69,11 +74,6 @@ class _RandomWordsState extends State<RandomWords> {
       ),
     );
   }
-
-  final _suggestions = <WordPair>[];
-  final _saved = <WordPair>{};
-  final _biggerFont = const TextStyle(fontSize: 18);
-  String view = 'lista';
 
   corpo() {
     if (view == 'lista') {
@@ -225,16 +225,21 @@ class TelaEditar extends StatefulWidget {
 }
 
 class _TelaEditarState extends State<TelaEditar> {
-  final nomeController = TextEditingController();
+  final firstController = TextEditingController();
+  final secondController = TextEditingController();
 
   onSubmit() {
-    final newName = nomeController.text;
+    final argumentos =
+        ModalRoute.of(context)?.settings.arguments as ArgumentosHome;
 
-    if (newName.isEmpty) {
+    final first = firstController.text;
+    final second = secondController.text;
+
+    if (first.isEmpty) {
       return;
     }
 
-    print(newName);
+    _suggestions[argumentos.id] = WordPair(first, second);
     Navigator.pushNamed(context, '/');
   }
 
@@ -271,8 +276,20 @@ class _TelaEditarState extends State<TelaEditar> {
           SizedBox(
             width: 500,
             child: TextField(
-              controller: nomeController,
-              decoration: const InputDecoration(labelText: 'Novo nome'),
+              controller: firstController,
+              decoration: const InputDecoration(
+                  labelText: 'Primeira palavra do novo nome'),
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          SizedBox(
+            width: 500,
+            child: TextField(
+              controller: secondController,
+              decoration: const InputDecoration(
+                  labelText: 'Segunda palavra do novo nome'),
             ),
           ),
           const SizedBox(
