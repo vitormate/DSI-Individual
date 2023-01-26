@@ -193,6 +193,7 @@ class _RandomWordsState extends State<RandomWords> {
                   setState(() {});
                 },
                 icon: const Icon(Icons.list_alt_outlined),
+                tooltip: 'Lista',
               ),
               IconButton(
                 onPressed: () {
@@ -200,6 +201,7 @@ class _RandomWordsState extends State<RandomWords> {
                   setState(() {});
                 },
                 icon: const Icon(Icons.dataset_outlined),
+                tooltip: 'Bloco',
               ),
             ],
           ),
@@ -220,6 +222,7 @@ class _RandomWordsState extends State<RandomWords> {
               );
             },
             icon: const Icon(Icons.add),
+            tooltip: 'Adicionar nome',
           ),
         ],
       ),
