@@ -253,7 +253,7 @@ class _TelaEditarState extends State<TelaEditar> {
             height: 50,
           ),
           const Text(
-            'A palavra que deve ser editada é: ',
+            'Digite sua alteração: ',
             style: TextStyle(
               fontSize: 40,
               color: Colors.deepPurple,
@@ -280,7 +280,7 @@ class _TelaEditarState extends State<TelaEditar> {
           ),
           ElevatedButton(
             onPressed: onSubmit,
-            child: const Text('Alterar'),
+            child: const Text('Confirmar'),
           )
         ],
       ),
