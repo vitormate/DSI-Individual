@@ -5,10 +5,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class Argumentos {
+class ArgumentosHome {
   final WordPair nome;
+  final int id;
 
-  Argumentos({required this.nome});
+  ArgumentosHome({
+    required this.nome,
+    required this.id,
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -91,18 +95,14 @@ class _RandomWordsState extends State<RandomWords> {
               style: _biggerFont,
             ),
             onTap: () {
-              print(_suggestions[index]);
               Navigator.pushNamed(
                 context,
                 '/editar',
-                arguments: Argumentos(nome: _suggestions[index]),
+                arguments: ArgumentosHome(
+                  nome: _suggestions[index],
+                  id: index,
+                ),
               );
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const Editar(),
-              //   ),
-              // );
             },
             trailing: IconButton(
               onPressed: () {
@@ -136,18 +136,14 @@ class _RandomWordsState extends State<RandomWords> {
           final alreadySaved = _saved.contains(_suggestions[i]);
           return InkWell(
             onTap: () {
-              print(_suggestions[i]);
               Navigator.pushNamed(
                 context,
                 '/editar',
-                arguments: Argumentos(nome: _suggestions[i]),
+                arguments: ArgumentosHome(
+                  nome: _suggestions[i],
+                  id: i,
+                ),
               );
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const Editar(),
-              //   ),
-              // );
             },
             child: Card(
               child: Column(
@@ -229,9 +225,23 @@ class TelaEditar extends StatefulWidget {
 }
 
 class _TelaEditarState extends State<TelaEditar> {
+  final nomeController = TextEditingController();
+
+  onSubmit() {
+    final newName = nomeController.text;
+
+    if (newName.isEmpty) {
+      return;
+    }
+
+    print(newName);
+    Navigator.pushNamed(context, '/');
+  }
+
   @override
   Widget build(BuildContext context) {
-    final argumentos = ModalRoute.of(context)!.settings.arguments as Argumentos;
+    final argumentos =
+        ModalRoute.of(context)?.settings.arguments as ArgumentosHome;
 
     return Scaffold(
       appBar: AppBar(
@@ -258,17 +268,18 @@ class _TelaEditarState extends State<TelaEditar> {
               ),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: 500,
             child: TextField(
-              decoration: InputDecoration(labelText: 'Novo nome'),
+              controller: nomeController,
+              decoration: const InputDecoration(labelText: 'Novo nome'),
             ),
           ),
           const SizedBox(
             height: 50,
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: onSubmit,
             child: const Text('Alterar'),
           )
         ],
