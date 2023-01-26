@@ -208,6 +208,19 @@ class _RandomWordsState extends State<RandomWords> {
             onPressed: _pushSaved,
             tooltip: 'Favoritos',
           ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                '/editar',
+                arguments: ArgumentosHome(
+                  nome: WordPair('.', '.'),
+                  id: -1,
+                ),
+              );
+            },
+            icon: const Icon(Icons.add),
+          ),
         ],
       ),
       body: corpo(),
@@ -235,11 +248,23 @@ class _TelaEditarState extends State<TelaEditar> {
     final first = firstController.text;
     final second = secondController.text;
 
-    if (first.isEmpty) {
+    if (first.isEmpty || second.isEmpty) {
       return;
     }
 
     _suggestions[argumentos.id] = WordPair(first, second);
+    Navigator.pushNamed(context, '/');
+  }
+
+  addToList() {
+    final first = firstController.text;
+    final second = secondController.text;
+
+    if (first.isEmpty || second.isEmpty) {
+      return;
+    }
+
+    _suggestions.add(WordPair(first, second));
     Navigator.pushNamed(context, '/');
   }
 
@@ -295,9 +320,23 @@ class _TelaEditarState extends State<TelaEditar> {
           const SizedBox(
             height: 50,
           ),
-          ElevatedButton(
-            onPressed: onSubmit,
-            child: const Text('Confirmar'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed:
+                    argumentos.nome.asPascalCase == '..' ? null : onSubmit,
+                child: const Text('Alterar'),
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+              ElevatedButton(
+                onPressed:
+                    argumentos.nome.asPascalCase == '..' ? addToList : null,
+                child: const Text('Adicionar'),
+              ),
+            ],
           )
         ],
       ),
